@@ -1,10 +1,12 @@
 pipeline {
 	
     agent any
+    
 	tools { 
         maven 'maven'
         jdk 'java-17-openjdk'
        }	
+    
     stages {
         stage('Checkout') {
             steps {
@@ -23,7 +25,7 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-		    echo 'Starting Tests'
+		    		echo 'Starting Tests'
                     sh 'mvn test'
                 }
             }
