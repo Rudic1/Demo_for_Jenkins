@@ -10,6 +10,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
+		sleep time: 2, unit: 'SECONDS'
                 git 'https://github.com/Rudic1/Demo_for_Jenkins.git'
             }
         }
@@ -25,7 +26,7 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-		    		echo 'Starting Tests'
+		    echo 'Starting Tests'
                     sh 'mvn test'
                 }
             }
@@ -39,13 +40,14 @@ pipeline {
         
         stage('Test Results') {
             steps {
-                unit '**/target/surefire-reports/*.xml' 
+                junit '**/target/surefire-reports/*.xml' 
             }
         }
 
         stage('Deploy') {
             steps {
                 // Optional
+		sleep time: 10, unit: 'SECONDS'
                 echo 'Deployment erfolgreich!'
             }
         }
