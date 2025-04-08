@@ -28,6 +28,18 @@ pipeline {
                 }
             }
         }
+        
+        stage('Archive Artifacts') {
+            steps {
+                archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true
+            }
+        }
+        
+        stage('Test Results') {
+            steps {
+                unit '**/target/surefire-reports/*.xml' 
+            }
+        }
 
         stage('Deploy') {
             steps {
