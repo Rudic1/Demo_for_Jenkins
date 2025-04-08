@@ -23,6 +23,7 @@ pipeline {
         stage('Test') {
             steps {
                 script {
+					echo 'Starting Tests'
                     sh 'mvn test'
                 }
             }
