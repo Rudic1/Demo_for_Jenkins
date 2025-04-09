@@ -73,6 +73,7 @@ pipeline {
         }
         
         stage('Archive Artifacts') {
+	    agent {label 'linux'}
             steps {
                 archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true
             }
