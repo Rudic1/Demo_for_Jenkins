@@ -10,12 +10,13 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-		sleep time: 2, unit: 'SECONDS'
+				sleep time: 3, unit: 'SECONDS'
                 git 'https://github.com/Rudic1/Demo_for_Jenkins.git'
             }
         }
         
         stage('Build') {
+			agent {label 'linux'}
             steps {
                 script {
                     sh 'mvn clean install'
@@ -24,17 +25,43 @@ pipeline {
         }
 
         stage('Test') {
+			agent {label 'linux'}
             steps {
                 script {
-		    echo 'Starting Tests'
+		    		echo 'Starting Tests'
                     sh 'mvn test'
                 }
             }
-        }
+        } 
         
-        stage('Archive Artifacts') {
-            steps {
-                archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true
+   	    stage('Simulate Browser Tests') {
+            parallel {
+                stage('Firefox') {
+                    agent { label 'linux' }
+                    steps {
+                        echo 'Running tests on Firefox...'
+                        sh 'echo Simulating Firefox tests'
+                        sleep 6
+                    }
+                }
+
+                stage('Chrome') {
+                    agent { label 'win' }
+                    steps {
+                        echo 'Running tests on Chrome...'
+                        sh 'echo Simulating Chrome tests'
+                        sleep 4
+                    }
+                }
+
+                stage('Edge Test') {
+                    agent { label 'win' }
+                    steps {
+                        echo 'Running tests on Edge (Windows)...'
+                        bat 'echo Simulating Edge tests'
+                        sleep 5
+                    }
+                }
             }
         }
         
@@ -43,11 +70,16 @@ pipeline {
                 junit '**/target/surefire-reports/*.xml' 
             }
         }
+        
+        stage('Archive Artifacts') {
+            steps {
+                archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true
+            }
+        }
 
         stage('Deploy') {
             steps {
-                // Optional
-		sleep time: 10, unit: 'SECONDS'
+				sleep time: 3, unit: 'SECONDS'
                 echo 'Deployment erfolgreich!'
             }
         }
