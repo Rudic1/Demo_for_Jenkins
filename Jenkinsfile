@@ -39,7 +39,7 @@ pipeline {
                     agent { label 'win' }
                     steps {
                         echo 'Running tests on Chrome...'
-                        bat 'echo Simulating Chrome tests'
+                        sh 'echo Simulating Chrome tests'
                         sleep 4
                     }
                 }
