@@ -19,7 +19,7 @@ pipeline {
 	    agent {label 'linux'}
             steps {
                 script {
-                    sh 'mvn clean install -DskipTests'
+                    sh 'mvn clean install'
                 }
             }
         }
@@ -44,7 +44,7 @@ pipeline {
                     }
                 }
 
-                stage('Edge Test') {
+                stage('Edge') {
 		    agent { label 'win' }
                     steps {
                         echo 'Running tests on Edge (Windows)...'
@@ -66,6 +66,7 @@ pipeline {
         } 
         
         stage('Test Results') {
+	    agent {label 'linux'}
             steps {
                 junit '**/target/surefire-reports/*.xml' 
             }
