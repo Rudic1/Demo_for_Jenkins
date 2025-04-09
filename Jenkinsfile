@@ -19,21 +19,11 @@ pipeline {
 	    agent {label 'linux'}
             steps {
                 script {
-                    sh 'mvn clean install'
+                    sh 'mvn clean install -DskipTests'
                 }
             }
         }
 
-        stage('Test') {
-	    agent {label 'linux'}
-            steps {
-                script {
-		    echo 'Starting Tests'
-                    sh 'mvn test'
-                }
-            }
-        } 
-        
    	stage('Simulate Browser Tests') {
             parallel {
                 stage('Firefox') {
@@ -49,12 +39,13 @@ pipeline {
                     agent { label 'win' }
                     steps {
                         echo 'Running tests on Chrome...'
-                        sh 'echo Simulating Chrome tests'
+                        bat 'echo Simulating Chrome tests'
                         sleep 4
                     }
                 }
 
                 stage('Edge Test') {
+		    agent { label 'win' }
                     steps {
                         echo 'Running tests on Edge (Windows)...'
                         bat 'echo Simulating Edge tests'
@@ -63,6 +54,16 @@ pipeline {
                 }
             }
         }
+
+	 stage('Unit-Tests') {
+	    agent {label 'linux'}
+            steps {
+                script {
+		    echo 'Starting Tests'
+                    sh 'mvn test'
+                }
+            }
+        } 
         
         stage('Test Results') {
             steps {
@@ -78,7 +79,7 @@ pipeline {
 
         stage('Deploy') {
             steps {
-				sleep time: 3, unit: 'SECONDS'
+		sleep time: 3, unit: 'SECONDS'
                 echo 'Deployment erfolgreich!'
             }
         }
