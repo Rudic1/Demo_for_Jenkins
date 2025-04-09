@@ -1,22 +1,22 @@
 pipeline {
 	
-    agent {label 'linux'}
+    agent any
     
-	tools { 
-        maven 'maven'
-        jdk 'java-17-openjdk'
-       }	
+    tools { 
+   	 maven 'maven'
+   	 jdk 'java-17-openjdk'
+    }	
     
     stages {
         stage('Checkout') {
             steps {
-				sleep time: 3, unit: 'SECONDS'
+		sleep time: 3, unit: 'SECONDS'
                 git 'https://github.com/Rudic1/Demo_for_Jenkins.git'
             }
         }
         
         stage('Build') {
-			agent {label 'linux'}
+	    agent {label 'linux'}
             steps {
                 script {
                     sh 'mvn clean install'
@@ -25,16 +25,16 @@ pipeline {
         }
 
         stage('Test') {
-			agent {label 'linux'}
+	    agent {label 'linux'}
             steps {
                 script {
-		    		echo 'Starting Tests'
+		    echo 'Starting Tests'
                     sh 'mvn test'
                 }
             }
         } 
         
-   	    stage('Simulate Browser Tests') {
+   	stage('Simulate Browser Tests') {
             parallel {
                 stage('Firefox') {
                     agent { label 'linux' }
@@ -55,7 +55,6 @@ pipeline {
                 }
 
                 stage('Edge Test') {
-                    agent { label 'win' }
                     steps {
                         echo 'Running tests on Edge (Windows)...'
                         bat 'echo Simulating Edge tests'
