@@ -8,7 +8,7 @@ pipeline {
     }	
     
     stages {
-        stage('Checkout') {
+        stage('Check') {
             steps {
 		sleep time: 3, unit: 'SECONDS'
                 git 'https://github.com/Rudic1/Demo_for_Jenkins.git'
@@ -19,7 +19,7 @@ pipeline {
 	    agent {label 'linux'}
             steps {
                 script {
-                    sh 'mvn clean install'
+                    sh 'mvn clean install -DskipTests'
                 }
             }
         }
@@ -31,7 +31,7 @@ pipeline {
                     steps {
                         echo 'Running tests on Firefox...'
                         sh 'echo Simulating Firefox tests'
-                        sleep 6
+                        sleep 5
                     }
                 }
 
@@ -49,7 +49,7 @@ pipeline {
                     steps {
                         echo 'Running tests on Edge (Windows)...'
                         bat 'echo Simulating Edge tests'
-                        sleep 5
+                        sleep 4
                     }
                 }
             }
@@ -78,7 +78,7 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Simulate Deployment') {
             steps {
 		sleep time: 3, unit: 'SECONDS'
                 echo 'Deployment erfolgreich!'
